@@ -166,9 +166,6 @@ requires-dist = [
     { name = "ruff", specifier = ">=0.12.7" },
 ]
 
-[package.metadata.requires-dev]
-dev = []
-
 [[package]]
 name = "ruff"
 version = "0.12.7"
