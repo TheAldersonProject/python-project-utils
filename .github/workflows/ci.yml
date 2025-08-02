@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Lint, Format, and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install UV
+        run: |
+          make install-uv
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Set up virtual environment
+        run: |
+          make local-dev-config
+          source .venv/bin/activate
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Run Ruff Format
+        run: make format
+
+      - name: Run Ruff Check
+        run: make check
+
+      - name: Run Pytest with coverage
+        run: make test
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
