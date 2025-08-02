@@ -384,3 +384,5 @@ pyrightconfig.json
 local-dev
 
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,pycharm,jetbrains
+/pyvenv.cfg
+/CACHEDIR.TAG

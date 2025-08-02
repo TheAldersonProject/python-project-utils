@@ -4,20 +4,29 @@ authors = [
     { name = "Thiago Dias", email = "thiago@thir.info" }
 ]
 version = "0.1.0"
-description = """This project is to be used as a common project for linters, formatters and general helpers
-for python projects"""
+description = """This project serves as a shared foundation for linters, formatters, and general utilities in Python projects."""
 readme = "README.md"
-license = { file = "LICENSE" }
-classifiers = [
-    "Programming Language :: Python",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.13",
-    "Intended Audience :: Developers",
-]
+license = "Apache-2.0"
 requires-python = ">=3.13"
 dependencies = [
     "git-cliff>=2.10.0",
-    "pytest>=8.4.1",
-    "pytest-cov>=6.2.1",
     "ruff>=0.12.7",
+    "toml>=0.10.2",
+    "setuptools>=61.0",
+    "commitizen>=4.8.3",
+    "pre-commit>=4.2.0",
+    "pytest-cov>=6.2.1",
+    "pytest>=8.4.1",
+    "pyyaml>=6.0.2",
+    "mkdocs-material>=9.6.16",
+    "mkdocstrings[python]>=0.30.0",
+    "pymdown-extensions>=10.16.1",
 ]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include  = ["project_tools*"]
