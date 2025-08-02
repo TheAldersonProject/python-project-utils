@@ -34,9 +34,6 @@ jobs:
       - name: Install dependencies
         run: make install
 
-      - name: Run Ruff Format
-        run: make format
-
       - name: Run Ruff Check
         run: make check
 
