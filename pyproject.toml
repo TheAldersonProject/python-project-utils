@@ -3,7 +3,7 @@ name = "PythonProjectUtils"
 authors = [
     { name = "Thiago Dias", email = "thiago@thir.info" }
 ]
-version = "0.2.0"
+version = "0.3.0"
 description = """This project serves as a shared foundation for linters, formatters, and general utilities in Python projects."""
 readme = "README.md"
 license = "Apache-2.0"
