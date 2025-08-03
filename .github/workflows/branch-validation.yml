@@ -1,23 +1,19 @@
-name: Release
+name: Branch Validation
 
 on:
   push:
     branches:
-      - main
-
-permissions:
-  contents: write
+      - '**'
+      - '!main'
 
 jobs:
-  release:
-    name: Auto Release
+  test:
+    name: Lint, Format, and Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -37,10 +33,14 @@ jobs:
       - name: Install dependencies
         run: make install
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+      - name: Run Ruff Check
+        run: make check
 
-      - name: Execute Release Process
-        run: make release
+      - name: Run Pytest with coverage
+        run: make test
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml

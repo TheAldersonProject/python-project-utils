@@ -199,12 +199,18 @@ define do_release
 	@${PACKAGE_MANAGER} version --bump $(1) || { echo "Version bump failed! Aborting release."; exit 1; }
 	@NEW_RELEASE_VERSION=$$(${PACKAGE_MANAGER} version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 	@echo "New version: $$NEW_RELEASE_VERSION"
-	@echo "Generating changelog..."
-	@make changelog-generate || { echo "Changelog generation failed! Aborting release."; exit 1; }
-	@git add . || { echo "Git add failed! Aborting release."; exit 1; }
-	@git commit -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
+	@echo "Creating temporary commit for version bump..."
+	@git add pyproject.toml || { echo "Git add failed! Aborting release."; exit 1; }
+	@git commit -m "chore(release): bump version to $$NEW_RELEASE_VERSION" || { echo "Git commit failed! Aborting release."; exit 1; }
+	@echo "Creating version tag..."
 	@git tag v$$NEW_RELEASE_VERSION || { echo "Git tag failed! Aborting release."; exit 1; }
 	@git tag -f latest || { echo "Git tag latest failed! Aborting release."; exit 1; }
+	@echo "Generating changelog..."
+	@make changelog-generate || { echo "Changelog generation failed! Aborting release."; exit 1; }
+	@echo "Committing changelog..."
+	@git add CHANGELOG.md || { echo "Git add failed! Aborting release."; exit 1; }
+	@git commit --amend -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
+	@echo "Pushing changes and tags..."
 	@git push origin main --follow-tags || { echo "Git push failed! Aborting release."; exit 1; }
 	@git push origin latest --force || { echo "Git push latest failed! Aborting release."; exit 1; }
 	@echo ""
