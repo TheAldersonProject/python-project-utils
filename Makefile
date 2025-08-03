@@ -34,9 +34,14 @@ RUFF-ARGS 		= --target-version $(call format_py_version,$(PYTHON_VERSION)) -n
 
 # TOOL EXECUTOR
 
-## git-cliff
+## git-cliff (deprecated)
 GIT-CLIFF-PV-TE	= ${PACKAGE_MANAGER_RUN} git-cliff --config $(CLIFF_CONFIG_FILE) -v
 GIT-CLIFF-TE	= ${GIT-CLIFF-PV-TE} -o CHANGELOG.md
+
+## git-changelog
+GIT-CHANGELOG-PV-TE	= ${PACKAGE_MANAGER_RUN} git-changelog --style angular
+GIT-CHANGELOG-TE	= ${GIT-CHANGELOG-PV-TE} --output CHANGELOG.md
+GIT-CHANGELOG-VERSION-TE = ${PACKAGE_MANAGER_RUN} git-changelog --style angular --output CHANGELOG.md
 
 
 .PHONY: help check clean format generate-docs generate-docs-local install changelog-generate changelog-preview local-dev-config install-all install-python install-uv lint print-header print-footer test release release-major release-minor release-patch
@@ -61,7 +66,7 @@ help:
 	@echo "  make clean          	: Clean project artifacts"
 	@echo ""
 	@echo "Project Management:"
-	@echo "  make changelog-generate 	: Generate changelog from git history"
+	@echo "  make changelog-generate 	: Generate changelog from git history using git-changelog"
 	@echo "  make changelog-preview 	: Preview changelog without writing to file"
 	@echo "  make generate-docs 		: Generate the project documentation using mkdocs"
 	@echo "  make generate-docs-local 	: Generate the project documentation using mkdocs -- local for tests"
@@ -69,14 +74,14 @@ help:
 
 changelog-generate: print-header
 	@echo "Generating changelog..."
-	@${GIT-CLIFF-TE}
+	@${GIT-CHANGELOG-TE}
 	@echo ""
 	@echo "... changelog generation finalized. check CHANGELOG.md!"
 	@make print-footer
 
 changelog-preview: print-header
 	@echo "Previewing changelog (without writing to file)..."
-	@${GIT-CLIFF-PV-TE}
+	@${GIT-CHANGELOG-PV-TE}
 	@echo ""
 	@echo "... changelog preview completed!"
 	@make print-footer
@@ -204,8 +209,8 @@ define do_release
 	@echo "Creating temporary commit for version bump..."
 	@git add pyproject.toml || { echo "Git add failed! Aborting release."; exit 1; }
 	@git commit --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION" || { echo "Git commit failed! Aborting release."; exit 1; }
-	@echo "Generating changelog..."
-	@make changelog-generate || { echo "Changelog generation failed! Aborting release."; exit 1; }
+	@echo "Generating changelog with version $$NEW_RELEASE_VERSION..."
+	@${GIT-CHANGELOG-VERSION-TE} --unreleased-version $$NEW_RELEASE_VERSION || { echo "Changelog generation failed! Aborting release."; exit 1; }
 	@echo "Committing changelog..."
 	@git add CHANGELOG.md || { echo "Git add failed! Aborting release."; exit 1; }
 	@git commit --amend --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
