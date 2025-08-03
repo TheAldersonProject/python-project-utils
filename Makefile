@@ -189,3 +189,23 @@ test: print-header
 	@echo ""
 	@echo "...ending unit tests!"
 	@make print-footer
+
+.ONESHELL:
+release: print-header
+	@echo "Starting release..."
+	@echo ""
+	@echo "Bumping minor version..."
+	@${PACKAGE_MANAGER} version --bump minor
+	@NEW_RELEASE_VERSION=$$(${PACKAGE_MANAGER} version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+	@echo "New version: $$NEW_RELEASE_VERSION"
+	@echo "Generating changelog..."
+	@make changelog-generate
+	@git add .
+	@git commit -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog"
+	@git tag v$$NEW_RELEASE_VERSION
+	@git tag -f latest
+	@git push origin main --follow-tags
+	@git push origin latest --force
+	@echo ""
+	@echo "...ending release!"
+	@make print-footer
