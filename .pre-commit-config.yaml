@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.13.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  - repo: local
+    hooks:
+      - id: lint
+        name: Lint with Ruff
+        entry: make
+        args: [lint]
+        language: system
+        pass_filenames: false
+
+      - id: test
+        name: Run Tests with Coverage
+        entry: make
+        args: [test]
+        language: system
+        pass_filenames: false

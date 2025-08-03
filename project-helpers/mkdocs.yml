@@ -1,0 +1,44 @@
+site_name: Project Tools
+site_url: https://thgdiaz.github.io/python-project-utils/
+repo_url: https://github.com/thgdiaz/python-project-utils
+repo_name: thgdiaz/python-project-utils
+edit_uri: edit/main/docs/
+
+theme:
+  name: readthedocs
+
+plugins:
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [ project_tools ]
+          options:
+            show_source: true
+            heading_level: 2
+            members_order: source
+            docstring_style: google
+            show_if_no_docstring: false
+            show_signature_annotations: true
+
+nav:
+  - Home: index.md
+  - Reference:
+    - Core:
+      - File Handler: core/file_handler.md
+
+markdown_extensions:
+  - pymdownx.tasklist
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+
+extra_css:
+  - https://unpkg.com/mermaid@8.5.1/dist/mermaid.css
+extra_javascript:
+  - https://unpkg.com/mermaid@8.5.1/dist/mermaid.min.js
