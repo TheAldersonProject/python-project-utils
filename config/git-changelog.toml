@@ -1,0 +1,9 @@
+repository="."
+convention="angular"
+provider="github"
+template="keepachangelog"
+parse_trailers=true
+parse_refs=false
+sections=["build", "deps", "feat", "fix", "refactor"]
+versioning="pep440"
+in_place=true

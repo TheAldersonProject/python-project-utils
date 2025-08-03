@@ -24,27 +24,26 @@ SCRIPTS_DIR 			= scripts
 TEST_DIR 				= tests
 VENV_DIR  				= .venv
 
-## uv run
-PACKAGE_MANAGER_RUN = uv run
-
 # TOOLS
 PACKAGE_MANAGER = uv
+
+## uv run
+PACKAGE_MANAGER_RUN = ${PACKAGE_MANAGER} run
+
 RUFF 			= ${PACKAGE_MANAGER_RUN} ruff --config $(RUFF_CONFIG_FILE)
 RUFF-ARGS 		= --target-version $(call format_py_version,$(PYTHON_VERSION)) -n
 
 # TOOL EXECUTOR
-
-## git-cliff (deprecated)
-GIT-CLIFF-PV-TE	= ${PACKAGE_MANAGER_RUN} git-cliff --config $(CLIFF_CONFIG_FILE) -v
-GIT-CLIFF-TE	= ${GIT-CLIFF-PV-TE} -o CHANGELOG.md
 
 ## git-changelog
 GIT-CHANGELOG-PV-TE	= ${PACKAGE_MANAGER_RUN} git-changelog --style angular
 GIT-CHANGELOG-TE	= ${GIT-CHANGELOG-PV-TE} --output CHANGELOG.md
 GIT-CHANGELOG-VERSION-TE = ${PACKAGE_MANAGER_RUN} git-changelog --style angular --output CHANGELOG.md
 
+## pre-commit
+PRE-COMMIT-RUN-ALL-FILES	= ${PACKAGE_MANAGER_RUN}  pre-commit run --all-files
 
-.PHONY: help check clean format generate-docs generate-docs-local install changelog-generate changelog-preview local-dev-config install-all install-python install-uv lint print-header print-footer test release release-major release-minor release-patch
+.PHONY: help check clean format generate-docs generate-docs-local install changelog-generate changelog-preview local-dev-config install-all install-python install-uv lint print-header print-footer test release release-major release-minor release-patch pre-commit-all-files
 
 help:
 	@echo ""
@@ -168,6 +167,12 @@ lint: print-header
 	@${RUFF} check ${SOURCE_DIR} ${SCRIPTS_DIR} ${TEST_DIR} ${DOCS_DIR}  ${RUFF-ARGS} -v
 	@echo ""
 	@echo "...ending ruff check!"
+	@make print-footer
+
+pre-commit-all-files: print-header
+	@echo "pre-commit run for all files for validation..."
+	@${PRE-COMMIT-RUN-ALL-FILES}
+	@echo "...pre-commit run for all files for validation executed!"
 	@make print-footer
 
 print-header:
