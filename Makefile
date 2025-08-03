@@ -210,7 +210,7 @@ define do_release
 	@git add pyproject.toml || { echo "Git add failed! Aborting release."; exit 1; }
 	@git commit --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION" || { echo "Git commit failed! Aborting release."; exit 1; }
 	@echo "Generating changelog with version $$NEW_RELEASE_VERSION..."
-	@${GIT-CHANGELOG-VERSION-TE} --unreleased-version $$NEW_RELEASE_VERSION || { echo "Changelog generation failed! Aborting release."; exit 1; }
+	@${GIT-CHANGELOG-VERSION-TE} -B $$NEW_RELEASE_VERSION || { echo "Changelog generation failed! Aborting release."; exit 1; }
 	@echo "Committing changelog..."
 	@git add CHANGELOG.md || { echo "Git add failed! Aborting release."; exit 1; }
 	@git commit --amend --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
