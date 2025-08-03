@@ -39,7 +39,7 @@ GIT-CLIFF-PV-TE	= ${PACKAGE_MANAGER_RUN} git-cliff --config $(CLIFF_CONFIG_FILE)
 GIT-CLIFF-TE	= ${GIT-CLIFF-PV-TE} -o CHANGELOG.md
 
 
-.PHONY: help check clean format generate-docs generate-docs-local install changelog-generate changelog-preview local-dev-config install-all install-python install-uv lint print-header print-footer test
+.PHONY: help check clean format generate-docs generate-docs-local install changelog-generate changelog-preview local-dev-config install-all install-python install-uv lint print-header print-footer test release release-major release-minor release-patch
 
 help:
 	@echo ""
@@ -190,22 +190,51 @@ test: print-header
 	@echo "...ending unit tests!"
 	@make print-footer
 
-.ONESHELL:
-release: print-header
-	@echo "Starting release..."
+# Common release function to avoid code duplication
+define do_release
+	@echo "Running tests before release..."
+	@make test || { echo "Tests failed! Aborting release."; exit 1; }
 	@echo ""
-	@echo "Bumping minor version..."
-	@${PACKAGE_MANAGER} version --bump minor
+	@echo "Bumping $(1) version..."
+	@${PACKAGE_MANAGER} version --bump $(1) || { echo "Version bump failed! Aborting release."; exit 1; }
 	@NEW_RELEASE_VERSION=$$(${PACKAGE_MANAGER} version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 	@echo "New version: $$NEW_RELEASE_VERSION"
 	@echo "Generating changelog..."
-	@make changelog-generate
-	@git add .
-	@git commit -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog"
-	@git tag v$$NEW_RELEASE_VERSION
-	@git tag -f latest
-	@git push origin main --follow-tags
-	@git push origin latest --force
+	@make changelog-generate || { echo "Changelog generation failed! Aborting release."; exit 1; }
+	@git add . || { echo "Git add failed! Aborting release."; exit 1; }
+	@git commit -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
+	@git tag v$$NEW_RELEASE_VERSION || { echo "Git tag failed! Aborting release."; exit 1; }
+	@git tag -f latest || { echo "Git tag latest failed! Aborting release."; exit 1; }
+	@git push origin main --follow-tags || { echo "Git push failed! Aborting release."; exit 1; }
+	@git push origin latest --force || { echo "Git push latest failed! Aborting release."; exit 1; }
 	@echo ""
 	@echo "...ending release!"
+endef
+
+.ONESHELL:
+release: print-header
+	@echo "Starting release (minor version bump)..."
+	@echo ""
+	$(call do_release,minor)
+	@make print-footer
+
+.ONESHELL:
+release-major: print-header
+	@echo "Starting release (major version bump)..."
+	@echo ""
+	$(call do_release,major)
+	@make print-footer
+
+.ONESHELL:
+release-minor: print-header
+	@echo "Starting release (minor version bump)..."
+	@echo ""
+	$(call do_release,minor)
+	@make print-footer
+
+.ONESHELL:
+release-patch: print-header
+	@echo "Starting release (patch version bump)..."
+	@echo ""
+	$(call do_release,patch)
 	@make print-footer
