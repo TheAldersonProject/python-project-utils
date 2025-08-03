@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Minor refactoring on structure
 
 <!-- insertion marker -->
+## [0.6.0](https://github.com/TheAldersonProject/python-project-utils/releases/tag/0.6.0) - 2025-08-03
+
+<small>[Compare with v0.5.0](https://github.com/TheAldersonProject/python-project-utils/compare/v0.5.0...0.6.0)</small>
+
+## [v0.5.0](https://github.com/TheAldersonProject/python-project-utils/releases/tag/v0.5.0) - 2025-08-03
+
+<small>[Compare with v0.4.0](https://github.com/TheAldersonProject/python-project-utils/compare/v0.4.0...v0.5.0)</small>
+
+## [v0.4.0](https://github.com/TheAldersonProject/python-project-utils/releases/tag/v0.4.0) - 2025-08-03
+
+<small>[Compare with first commit](https://github.com/TheAldersonProject/python-project-utils/compare/798ecc7341a692fa99de130fc7adc83e0783c54b...v0.4.0)</small>
+
 ## [v0.5.1](https://github.com/TheAldersonProject/python-project-utils/releases/tag/v0.5.1) - 2025-08-03
 
 <small>[Compare with v0.5.0](https://github.com/TheAldersonProject/python-project-utils/compare/v0.5.0...v0.5.1)</small>
