@@ -204,17 +204,19 @@ define do_release
 	@echo "Creating temporary commit for version bump..."
 	@git add pyproject.toml || { echo "Git add failed! Aborting release."; exit 1; }
 	@git commit --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION" || { echo "Git commit failed! Aborting release."; exit 1; }
-	@echo "Creating version tag..."
-	@git tag v$$NEW_RELEASE_VERSION || { echo "Git tag failed! Aborting release."; exit 1; }
-	@git tag -f latest || { echo "Git tag latest failed! Aborting release."; exit 1; }
 	@echo "Generating changelog..."
 	@make changelog-generate || { echo "Changelog generation failed! Aborting release."; exit 1; }
 	@echo "Committing changelog..."
 	@git add CHANGELOG.md || { echo "Git add failed! Aborting release."; exit 1; }
 	@git commit --amend --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
+	@echo "Creating version tag..."
+	@git tag -f v$$NEW_RELEASE_VERSION || { echo "Git tag failed! Aborting release."; exit 1; }
+	@git tag -f latest || { echo "Git tag latest failed! Aborting release."; exit 1; }
 	@echo "Pushing changes and tags..."
-	@git push origin main --follow-tags || { echo "Git push failed! Aborting release."; exit 1; }
-	@git push origin latest --force || { echo "Git push latest failed! Aborting release."; exit 1; }
+	@git push origin main || { echo "Git push failed! Aborting release."; exit 1; }
+	@echo "Pushing tags..."
+	@git push origin v$$NEW_RELEASE_VERSION --force || { echo "Git push version tag failed! Aborting release."; exit 1; }
+	@git push origin latest --force || { echo "Git push latest tag failed! Aborting release."; exit 1; }
 	@echo ""
 	@echo "...ending release!"
 endef
