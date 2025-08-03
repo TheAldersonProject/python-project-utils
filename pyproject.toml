@@ -10,6 +10,7 @@ license = "Apache-2.0"
 requires-python = ">=3.13"
 dependencies = [
     "git-cliff>=2.10.0",
+    "git-changelog>=1.0.0",
     "ruff>=0.12.7",
     "toml>=0.10.2",
     "setuptools>=61.0",
