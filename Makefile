@@ -7,15 +7,15 @@ $(shell echo "py$(subst .,,$(1))")
 endef
 
 # PYTHON
-PYTHON_VERSION := $(shell cat ./project-helpers/.python-version)
+PYTHON_VERSION := $(shell cat ./config/.python-version)
 
 # PROJECT
 
 # Project configuration files
 PROJECT_CONFIG_FILE		= pyproject.toml
-RUFF_CONFIG_FILE 		= ./project-helpers/ruff.toml
-CLIFF_CONFIG_FILE		= ./project-helpers/cliff.toml
-MKDOCS_CONFIG_FILE		= ./project-helpers/mkdocs.yml
+RUFF_CONFIG_FILE 		= ./config/ruff.toml
+CLIFF_CONFIG_FILE		= ./config/cliff.toml
+MKDOCS_CONFIG_FILE		= ./config/mkdocs.yml
 
 # Project folders
 SOURCE_DIR 				= project_tools
