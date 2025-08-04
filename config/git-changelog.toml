@@ -1,9 +1,21 @@
-repository="."
-convention="angular"
+convention="conventional"
 provider="github"
 template="keepachangelog"
-parse_trailers=true
-parse_refs=false
-sections=["build", "deps", "feat", "fix", "refactor"]
-versioning="pep440"
-in_place=true
+sections = [
+    "build",
+    "deps",
+    "feat",
+    "fix",
+    "refactor",
+    "chore",
+    "revert",
+    "ref",
+    "refactor",
+    "perf",
+    "ci",
+    "deps",
+    "doc",
+    "docs",
+    "style",
+    "test"
+]

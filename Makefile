@@ -12,33 +12,33 @@ PYTHON_VERSION := $(shell cat ./config/.python-version)
 # PROJECT
 
 # Project configuration files
-PROJECT_CONFIG_FILE		= pyproject.toml
-RUFF_CONFIG_FILE 		= ./config/ruff.toml
-CLIFF_CONFIG_FILE		= ./config/cliff.toml
-MKDOCS_CONFIG_FILE		= ./config/mkdocs.yml
+PROJECT_CONFIG_FILE			= pyproject.toml
+RUFF_CONFIG_FILE 			= ./config/ruff.toml
+CLIFF_CONFIG_FILE			= ./config/cliff.toml
+MKDOCS_CONFIG_FILE			= ./config/mkdocs.yml
 
 # Project folders
-SOURCE_DIR 				= project_tools
-DOCS_DIR 				= docs
-SCRIPTS_DIR 			= scripts
-TEST_DIR 				= tests
-VENV_DIR  				= .venv
+SOURCE_DIR 					= project_tools
+DOCS_DIR 					= docs
+SCRIPTS_DIR 				= scripts
+TEST_DIR 					= tests
+VENV_DIR  					= .venv
 
 # TOOLS
-PACKAGE_MANAGER = uv
+PACKAGE_MANAGER 			= uv
 
 ## uv run
-PACKAGE_MANAGER_RUN = ${PACKAGE_MANAGER} run
+PACKAGE_MANAGER_RUN 		= ${PACKAGE_MANAGER} run
 
-RUFF 			= ${PACKAGE_MANAGER_RUN} ruff --config $(RUFF_CONFIG_FILE)
-RUFF-ARGS 		= --target-version $(call format_py_version,$(PYTHON_VERSION)) -n
+RUFF 						= ${PACKAGE_MANAGER_RUN} ruff --config $(RUFF_CONFIG_FILE)
+RUFF-ARGS 					= --target-version $(call format_py_version,$(PYTHON_VERSION)) -n
 
 # TOOL EXECUTOR
 
 ## git-changelog
-GIT-CHANGELOG-PV-TE	= ${PACKAGE_MANAGER_RUN} git-changelog --style angular
-GIT-CHANGELOG-TE	= ${GIT-CHANGELOG-PV-TE} --output CHANGELOG.md
-GIT-CHANGELOG-VERSION-TE = ${PACKAGE_MANAGER_RUN} git-changelog --style angular --output CHANGELOG.md
+GIT-CHANGELOG-PV-TE			= ${PACKAGE_MANAGER_RUN} git-changelog --style conventional
+GIT-CHANGELOG-TE			= ${GIT-CHANGELOG-PV-TE} --output CHANGELOG.md
+GIT-CHANGELOG-VERSION-TE 	= ${PACKAGE_MANAGER_RUN} git-changelog --style conventional --output CHANGELOG.md
 
 ## pre-commit
 PRE-COMMIT-RUN-ALL-FILES	= ${PACKAGE_MANAGER_RUN}  pre-commit run --all-files
@@ -213,12 +213,12 @@ define do_release
 	@echo "New version: $$NEW_RELEASE_VERSION"
 	@echo "Creating temporary commit for version bump..."
 	@git add pyproject.toml || { echo "Git add failed! Aborting release."; exit 1; }
-	@git commit --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION" || { echo "Git commit failed! Aborting release."; exit 1; }
+	@git commit --no-verify -m "build(release): bump version to $$NEW_RELEASE_VERSION" || { echo "Git commit failed! Aborting release."; exit 1; }
 	@echo "Generating changelog with version $$NEW_RELEASE_VERSION..."
 	@${GIT-CHANGELOG-VERSION-TE} -B $$NEW_RELEASE_VERSION || { echo "Changelog generation failed! Aborting release."; exit 1; }
 	@echo "Committing changelog..."
 	@git add CHANGELOG.md || { echo "Git add failed! Aborting release."; exit 1; }
-	@git commit --amend --no-verify -m "chore(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
+	@git commit --amend --no-verify -m "build(release): bump version to $$NEW_RELEASE_VERSION and generate changelog" || { echo "Git commit failed! Aborting release."; exit 1; }
 	@echo "Creating version tag..."
 	@git tag -f v$$NEW_RELEASE_VERSION || { echo "Git tag failed! Aborting release."; exit 1; }
 	@git tag -f latest || { echo "Git tag latest failed! Aborting release."; exit 1; }
