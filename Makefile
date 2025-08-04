@@ -169,6 +169,7 @@ lint: print-header
 	@echo ""
 	@echo "SRC :: ${SOURCE_DIR}"
 	@${RUFF} check ${SOURCE_DIR} ${SCRIPTS_DIR} ${TEST_DIR} ${DOCS_DIR}  ${RUFF-ARGS} -v
+	@${PYRIGHT}
 	@echo ""
 	@echo "...ending ruff check!"
 	@make print-footer

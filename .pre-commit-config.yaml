@@ -14,7 +14,7 @@ repos:
   - repo: local
     hooks:
       - id: lint
-        name: Lint with Ruff
+        name: Lint with Ruff and Pyright
         entry: make
         args: [lint]
         language: system
