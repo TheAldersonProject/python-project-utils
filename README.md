@@ -1,3 +1,8 @@
+
+
+[![Checked with pyright](https://microsoft.github.io/pyright/img/pyright_badge.svg)](https://microsoft.github.io/pyright/)
+![Supported python versions](https://img.shields.io/pypi/pyversions/pyright)
+
 # Python project utils
 
 Linters, formatters and general python project utils and helpers

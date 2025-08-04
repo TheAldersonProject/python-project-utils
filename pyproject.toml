@@ -1,33 +1,60 @@
 [project]
 name = "PythonProjectUtils"
 authors = [
-    { name = "Thiago Dias", email = "thiago@thir.info" }
+    { name = "Thiago Dias", email = "thiago@thir.info" },
+    { name = "Lucas Infante", email = "maccinza@gmail.com" }
 ]
 version = "0.6.0"
 description = """This project serves as a shared foundation for linters, formatters, and general utilities in Python projects."""
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
-    "git-cliff>=2.10.0",
-    "git-changelog>=1.0.0",
-    "ruff>=0.12.7",
-    "toml>=0.10.2",
-    "setuptools>=61.0",
-    "commitizen>=4.8.3",
-    "pre-commit>=4.2.0",
-    "pytest-cov>=6.2.1",
-    "pytest>=8.4.1",
+    "structlog>=25.4.0",
     "pyyaml>=6.0.2",
+    "toml>=0.10.2",
+]
+
+[dependency-groups]
+dev = [
     "mkdocs-material>=9.6.16",
     "mkdocstrings[python]>=0.30.0",
     "pymdown-extensions>=10.16.1",
+    "pyright>=1.1.403",
+    "commitizen>=4.8.3",
+    "pre-commit>=4.2.0",
+    "pytest-cov>=6.2.1",
+    "setuptools>=61.0",
+    "pytest>=8.4.1",
+    "ruff>=0.12.7",
+    "git-changelog>=1.0.0",
+]
+
+[tool.pyright]
+include = ["src"]
+exclude = [
+    "**/__pycache__",
+    "src/experimental",
+    "src/typestubs",
+    "local-dev",
+]
+defineConstant = { DEBUG = true }
+stubPath = "src/stubs"
+
+reportMissingImports = "error"
+reportMissingTypeStubs = false
+
+pythonVersion = "3.13"
+
+executionEnvironments = [
+  { root = "src" }
 ]
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+
 [tool.setuptools.packages.find]
-where = ["."]
-include  = ["project_tools*"]
+where = ["src"]
+include  = ["*"]

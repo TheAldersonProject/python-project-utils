@@ -14,11 +14,11 @@ PYTHON_VERSION := $(shell cat ./config/.python-version)
 # Project configuration files
 PROJECT_CONFIG_FILE			= pyproject.toml
 RUFF_CONFIG_FILE 			= ./config/ruff.toml
-CLIFF_CONFIG_FILE			= ./config/cliff.toml
+CHANGELOG_CONFIG_FILE		= ./config/git-changelog.toml
 MKDOCS_CONFIG_FILE			= ./config/mkdocs.yml
 
 # Project folders
-SOURCE_DIR 					= project_tools
+SOURCE_DIR 					= src
 DOCS_DIR 					= docs
 SCRIPTS_DIR 				= scripts
 TEST_DIR 					= tests
@@ -30,8 +30,12 @@ PACKAGE_MANAGER 			= uv
 ## uv run
 PACKAGE_MANAGER_RUN 		= ${PACKAGE_MANAGER} run
 
+## Ruff linter
 RUFF 						= ${PACKAGE_MANAGER_RUN} ruff --config $(RUFF_CONFIG_FILE)
 RUFF-ARGS 					= --target-version $(call format_py_version,$(PYTHON_VERSION)) -n
+
+## Pyright linter
+PYRIGHT						= ${PACKAGE_MANAGER_RUN} pyright -p ${SOURCE_DIR}
 
 # TOOL EXECUTOR
 
@@ -191,7 +195,7 @@ test: print-header
 	@echo "Running unit tests..."
 	@echo ""
 	@if find tests -type f -name "test_*.py" | grep -q .; then \
-		${PACKAGE_MANAGER_RUN} pytest -v -s --log-level=DEBUG --color=auto --code-highlight=yes --cov=${SOURCE_DIR} --cov-report=xml --cov-fail-under=80; \
+		PYTHONPATH=src ${PACKAGE_MANAGER_RUN} pytest -v -s --log-level=DEBUG --color=auto --code-highlight=yes --cov=${SOURCE_DIR} --cov-report=xml --cov-fail-under=80; \
 	else \
 		echo "No test files found, skipping tests."; \
 		echo "" >> coverage.xml; \
